@@ -1,0 +1,4 @@
+EXPORTS
+;    DllMain             @1      NONAME
+;    BootstrapEntry      @6000   NONAME
+    

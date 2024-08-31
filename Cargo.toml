@@ -2,7 +2,7 @@
 name = "pengu-rust"
 version = "0.1.0"
 edition = "2021"
-build = "build.rs"
+build = "build/build.rs"
 
 [lib]
 name = "core"
@@ -11,4 +11,10 @@ crate-type = ["cdylib"]
 [profile.release]
 panic = "abort"
 
+[build-dependencies]
+bindgen = "0.70"
+fs_extra = "1.1"
+
 [dependencies]
+libc = "0.2"
+msgbox = "0.7"
