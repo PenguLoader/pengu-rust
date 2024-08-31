@@ -63,7 +63,7 @@ fn main() {
     println!("cargo:rustc-cdylib-link-arg=/DEF:build/library.def");
 
     // Generate bindings.rs.
-    println!("cargo:rerun-if-changed=wrapper.hh");
+    println!("cargo:rerun-if-changed={}", input_header);
     let bindings = bindgen::Builder::default()
         .layout_tests(false)
         .derive_debug(false)
@@ -83,8 +83,6 @@ fn main() {
     bindings
         .write_to_file(Path::new(&env::var("OUT_DIR").unwrap()).join("cef_bindings.rs"))
         .expect("Couldn't write bindings!");
-
-    println!(">>>> {}", env::var("OUT_DIR").unwrap());
 
     // Get the "Release" dir, which contains the resources (or "Debug" when using the "debug" feature).
     #[allow(unused_mut, unused_assignments)]
