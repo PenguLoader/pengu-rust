@@ -42,14 +42,6 @@ fn choose_source_dir() -> Option<String> {
 }
 
 fn main() {
-    if std::env::var("CARGO_CFG_TARGET_FAMILY")
-        .unwrap()
-        .to_lowercase()
-        == "wasm"
-    {
-        return;
-    }
-
     let source_dir = "cef"; // choose_source_dir().expect("Failed to locate CEF lib path");
     let input_header = "build/wrapper.hh";
 
@@ -60,6 +52,13 @@ fn main() {
     //     // Platform::Linux => println!("cargo:rustc-link-lib=cef"),
     // };
 
+    // link libcef
+    println!("cargo:rustc-link-lib=cef/lib/win/libcef");
+    // lazy load libcef
+    println!("cargo:rustc-cdylib-link-arg=/delayload:libcef.dll");
+    println!("cargo:rustc-cdylib-link-arg=delayimp.lib");
+
+    // export map
     println!("cargo:rustc-cdylib-link-arg=/DEF:build/library.def");
 
     // Generate bindings.rs.
@@ -73,6 +72,7 @@ fn main() {
         .default_enum_style(bindgen::EnumVariation::Rust {
             non_exhaustive: false,
         })
+        .no_copy("_cef_string_utf16_t")
         .allowlist_type("cef_.*")
         .allowlist_type("_cef_.*")
         .allowlist_function("cef_.*")
