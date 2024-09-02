@@ -9,7 +9,6 @@ define_proxy! {
         process_type: *const cef_string_t,
         command_line: *mut _cef_command_line_t,
     ) -> () {
-        _ = msgbox::create("pengu.rs", "processing command line", msgbox::IconType::Info);
         callme(self_, process_type, command_line)
     }
 }
@@ -23,7 +22,13 @@ define_hook! {
         extra_info: *mut _cef_dictionary_value_t,
         request_context: *mut _cef_request_context_t
     ) -> c_int {
-        _ = msgbox::create("pengu.rs", "creating browser", msgbox::IconType::Info);
+        let mut extra_info = extra_info;
+        if extra_info.is_null() {
+            extra_info = cef_dictionary_value_create();
+        }
+
+        (*extra_info).set_null.unwrap()(extra_info, &"main".into());
+
         callme(window_info, client, url, settings, extra_info, request_context)
     }
 }
@@ -35,8 +40,6 @@ define_hook! {
         app: *mut cef_app_t,
         windows_sandbox_info: *mut c_void
     ) -> c_int {
-        _ = msgbox::create("pengu.rs", "initializing cef", msgbox::IconType::Info);
-
         // hook method
         OnBeforeCommandLineProcessing::proxy(&mut (*app).on_before_command_line_processing);
 
