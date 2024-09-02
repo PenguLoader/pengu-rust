@@ -81,3 +81,38 @@ impl Drop for cef_string_t {
         }
     }
 }
+
+impl Into<cef_string_t> for &str {
+    fn into(self) -> cef_string_t {
+        cef_string_t::new(self)
+    }
+}
+
+pub trait CefStringUserfreeTrait {
+    /// Drop userfree string.
+    fn drop(self);
+    /// Obtain Rust string and drop userfree.
+    fn drop_string(self) -> String;
+}
+
+impl CefStringUserfreeTrait for cef_string_userfree_t {
+    fn drop(self) {
+        if !self.is_null() {
+            unsafe {
+                cef_string_userfree_utf16_free(self);
+            }
+        }
+    }
+
+    fn drop_string(self) -> String {
+        if self.is_null() {
+            return format!("");
+        }
+        unsafe {
+            let raw = std::slice::from_raw_parts((*self).str_, (*self).length);
+            let str = String::from_utf16(raw).unwrap();
+            self.drop();
+            str
+        }
+    }
+}
