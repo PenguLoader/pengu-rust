@@ -4,6 +4,12 @@ Challenge of implementing Pengu Core in Rust 🦀
 > The choice of programming language for a core library is a matter of preference and practicality.
 > The key is to leverage the language's strengths to create a robust, efficient, and maintainable library that seamlessly integrates into the application's ecosystem.
 
+<br />
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/3ef6b79a-9b27-41bc-b5f5-fc6e05718d7c" width="200" />
+</p>
+
 ## Why Rust?
 
 - UTF-8 strings
